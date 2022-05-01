@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Session {
-    private ArrayList<Workout> workouts;
+    private ArrayList<Workout> workouts = new ArrayList<>();
     private String name;
 
     public Session() {}
@@ -26,5 +26,13 @@ public class Session {
 
     public void setName(String name) { this.name = name; }
     public String getName() { return this.name; }
+
+    public ArrayList<Workout> getWorkouts() {
+        return workouts;
+    }
+
+    public void addWorkout(Workout workout) {
+        workouts.add(workout);
+    }
 }
 

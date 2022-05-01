@@ -83,6 +83,7 @@ public class RepLink implements Runnable {
                         pass = in.nextLine();
 
                         users.put(uname, new Account(uname, pass, pass));
+                        System.out.println();
                         System.out.println("Welcome, " + uname + "!");
                         currentUser = users.get(uname);
 
@@ -93,16 +94,15 @@ public class RepLink implements Runnable {
         }
 
         private void worker() {
-            System.out.println();
-            Scanner in = new Scanner(System.in); String[] line = new String[2];
-            int i;
+            Scanner in = new Scanner(System.in); String[] line = new String[10];
+
             while (!Objects.equals(line[0], "E")) {
-                line = new String[2];
-                i = 0;
+                line = new String[10];
+                System.out.println();
                 System.out.println("Enter your command (or E to Exit): ");
                 String parse = in.nextLine();
-                String[] words = parse.split("\\P{L}+");
-                CommandLine.run(new Workable(), words);
+                line = parse.split("\\P{L}+");
+                CommandLine.run(new Workable(), line);
             }
         }
 
@@ -144,36 +144,138 @@ public class RepLink implements Runnable {
         public void newItem(@Parameters String type) {
             Scanner in = new Scanner(System.in);
             switch (type) {
-                case "exercise":
-                    System.out.print("Enter Name: ");
+                case "exercise" -> {
+                    System.out.print("Enter exercise name: ");
                     String e_name = in.nextLine();
-                    System.out.print("Enter Description: ");
+                    System.out.print("Enter exercise description: ");
                     String e_desc = in.nextLine();
-                    System.out.print("Enter Set Number: ");
+                    System.out.print("Enter exercise set number: ");
                     int sets = Integer.parseInt(in.nextLine());
-                    System.out.print("Enter Rep Number: ");
+                    System.out.print("Enter exercise rep Number: ");
                     int reps = Integer.parseInt(in.nextLine());
 
                     Exercise exercise = new Exercise(e_name, e_desc, sets, reps);
                     currentUser.addExercise(exercise);
-                    break;
-
-                case "workout":
-                    System.out.print("Enter Name: ");
+                    System.out.println("New exercise " + e_name + " added to account.");
+                }
+                case "workout" -> {
+                    System.out.print("Enter workout name: ");
                     String w_name = in.nextLine();
-
                     Workout workout = new Workout(w_name);
                     currentUser.addWorkout(workout);
-                    break;
-
-                case "session":
-                    System.out.print("Enter Name: ");
+                    System.out.println("New workout " + w_name + " added to account.");
+                }
+                case "session" -> {
+                    System.out.print("Enter session name: ");
                     String s_name = in.nextLine();
-
                     Session session = new Session();
                     session.setName(s_name);
                     currentUser.addSession(session);
-                    break;
+                    System.out.println("New session " + s_name + " added to account.");
+                }
+            }
+        }
+
+        @Command(name = "add")
+        public void addItem(@Parameters String type) {
+            Scanner in = new Scanner(System.in);
+            switch (type) {
+                case "exercise" -> {
+                    if (currentUser.getExercises().size() == 0) {
+                        System.out.println("You haven't created any exercises yet. Use the command 'new exercise' to create one.");
+                        break;
+                    }
+
+                    if (currentUser.getWorkouts().size() == 0) {
+                        System.out.println("You haven't created any workouts yet. Use the command 'new workout' to create one.");
+                        break;
+                    }
+
+                    System.out.println("Which exercise would you like to add to a workout?");
+                    for (int i = 0; i < currentUser.getExercises().size(); i++) {
+                        System.out.println(i + ": " + currentUser.getExercises().get(i).getName());
+                    }
+                    System.out.print("Enter number: ");
+                    Exercise exe = currentUser.getExercises().get(in.nextInt());
+
+                    System.out.println("Which workout would you like to add this exercise to?");
+                    for (int i = 0; i < currentUser.getWorkouts().size(); i++) {
+                        System.out.println(i + ": " + currentUser.getWorkouts().get(i).getName());
+                    }
+                    System.out.print("Enter number: ");
+                    int workout = in.nextInt();
+                    currentUser.getWorkouts().get(workout).addExercise(exe);
+                    System.out.println("Added " + exe.getName() + " to workout " + currentUser.getWorkouts().get(workout).getName());
+                }
+
+                case "workout" -> {
+                    if (currentUser.getWorkouts().size() == 0) {
+                        System.out.println("You haven't created any workouts yet. Use the command 'new exercise' to create one.");
+                        break;
+                    }
+
+                    if (currentUser.getSessions().size() == 0) {
+                        System.out.println("You haven't created any sessions yet. Use the command 'new workout' to create one.");
+                        break;
+                    }
+
+                    System.out.println("Which workout would you like to add to a session?");
+                    for (int i = 0; i < currentUser.getWorkouts().size(); i++) {
+                        System.out.println(i + ": " + currentUser.getWorkouts().get(i).getName());
+                    }
+                    System.out.print("Enter number: ");
+                    Workout work = currentUser.getWorkouts().get(in.nextInt());
+
+                    System.out.println("Which session would you like to add this workout to?");
+                    for (int i = 0; i < currentUser.getSessions().size(); i++) {
+                        System.out.println(i + ": " + currentUser.getSessions().get(i).getName());
+                    }
+                    System.out.print("Enter number: ");
+                    int session = in.nextInt();
+                    currentUser.getSessions().get(session).addWorkout(work);
+                    System.out.println("Added " + work.getName() + " to workout " + currentUser.getWorkouts().get(session).getName());
+                }
+            }
+        }
+
+        @Command(name = "view")
+        public void viewItem(@Parameters String type) {
+            Scanner in = new Scanner(System.in);
+            switch (type) {
+                case "exercise" -> {
+                    if (currentUser.getExercises().size() == 0) {
+                        System.out.println("You haven't created any exercises yet. Use the command 'new exercise' to create one.");
+                        break;
+                    }
+                    for (Exercise exercise: currentUser.getExercises()) {
+                        exercise.print();
+                    }
+                }
+                case "workout" -> {
+                    if (currentUser.getWorkouts().size() == 0) {
+                        System.out.println("You haven't created any workouts yet. Use the command 'new workout' to create one.");
+                        break;
+                    }
+                    for (Workout workout: currentUser.getWorkouts()) {
+                        System.out.println(workout.getName());
+                        for (Exercise exercise: workout.getExercises()) {
+                            System.out.print("\t");
+                            exercise.print();
+                        }
+                    }
+                }
+                case "session" -> {
+                    if (currentUser.getSessions().size() == 0) {
+                        System.out.println("You haven't created any sessions yet. Use the command 'new workout' to create one.");
+                        break;
+                    }
+                    for (Session session: currentUser.getSessions()) {
+                        System.out.println(session.getName());
+                        for (Workout workout: session.getWorkouts()) {
+                            System.out.println("\t" + workout.getName());
+                        }
+                    }
+                }
             }
         }
         
