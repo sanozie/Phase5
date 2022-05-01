@@ -25,9 +25,8 @@ public class Exercise {
     }
     public void setName(String name) { this.name = name; }
 
-    public String print()
-    {
-        return this.reps + " reps of " + this.name + ":\n" + this.description + "\n";
+    public String print() {
+        return this.sets + " sets of " + this.reps + " reps of " + this.name + ":\n" + this.description + "\n";
     }
 
 }

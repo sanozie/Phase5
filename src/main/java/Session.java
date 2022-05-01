@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public class Session {
     private ArrayList<Workout> workouts;
+    private String name;
 
     public Session() {}
 
     public Session(ArrayList<Workout> workouts) {
         this.workouts = workouts;
-        displayWorkoutChoices();
     }
 
     public void displayWorkoutChoices()
@@ -18,11 +18,13 @@ public class Session {
         }
     }
 
-
     public void printMyWorkout() {
         for (Workout workout : this.workouts)
             for (Exercise exercise : workout.getExercises())
                 System.out.println(exercise.print());
     }
+
+    public void setName(String name) { this.name = name; }
+    public String getName() { return this.name; }
 }
 

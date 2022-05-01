@@ -14,7 +14,7 @@ public class Account {
             confirmPassword = "";
         }
 
-        public Account(String u, String p, String cp, ArrayList<Workout> workouts) {
+        public Account(String u, String p, String cp) {
             setUsername(u);
             setPassword(p);
             setConfirmPassword(cp);
