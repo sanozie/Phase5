@@ -27,7 +27,6 @@ public class RepLink implements Runnable {
     @Override
     public void run() {
         CommandLine.run(new Auth());
-        System.out.println("got here");
     }
 
     @Command
@@ -154,7 +153,7 @@ public class RepLink implements Runnable {
                     System.out.print("Enter exercise rep Number: ");
                     int reps = Integer.parseInt(in.nextLine());
 
-                    Exercise exercise = new Exercise(e_name, e_desc, sets, reps);
+                    Exercise exercise = new Exercise(e_name, e_desc, reps, sets);
                     currentUser.addExercise(exercise);
                     System.out.println("New exercise " + e_name + " added to account.");
                 }
@@ -240,7 +239,6 @@ public class RepLink implements Runnable {
 
         @Command(name = "view")
         public void viewItem(@Parameters String type) {
-            Scanner in = new Scanner(System.in);
             switch (type) {
                 case "exercise" -> {
                     if (currentUser.getExercises().size() == 0) {
@@ -259,7 +257,6 @@ public class RepLink implements Runnable {
                     for (Workout workout: currentUser.getWorkouts()) {
                         System.out.println(workout.getName());
                         for (Exercise exercise: workout.getExercises()) {
-                            System.out.print("\t");
                             exercise.print();
                         }
                     }
@@ -278,6 +275,9 @@ public class RepLink implements Runnable {
                 }
             }
         }
+
+        @Command(name = "E")
+        public void exitItem() {}
         
         @Override
         public void run() {

@@ -21,7 +21,7 @@ public class Session {
     public void printMyWorkout() {
         for (Workout workout : this.workouts)
             for (Exercise exercise : workout.getExercises())
-                System.out.println(exercise.print());
+                exercise.print();
     }
 
     public void setName(String name) { this.name = name; }
